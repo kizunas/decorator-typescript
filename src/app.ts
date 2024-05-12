@@ -63,6 +63,13 @@ function Log3(target: any, name: string | Symbol, descriptor: PropertyDescriptor
   console.log(descriptor);
 }
 
+function Log4(target: any, name: string | Symbol, position: number) { // nameはメソッド名, 引数の３番目はパラメータの位置
+  console.log("Parameter デコレータ");
+  console.log(target);
+  console.log(name);
+  console.log(position);
+}
+
 class Product {
   @Log // プロパティにデコレーターを追加することが可能（引数は二つ受け取れる）
   title: string;
@@ -84,7 +91,7 @@ class Product {
   }
 
   @Log3 // メソッドにデコレータを追加する。（引数は三つ）
-  getPriceWithTax(tax: number) {
+  getPriceWithTax(@Log4 tax: number) { // パラメーターにデコレーターを追加　（引数は三つ）
     return this._price * (1 + tax);
   }
 }
