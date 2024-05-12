@@ -56,6 +56,13 @@ function Log2(target: any, name: string, descriptor: PropertyDescriptor) { // Pr
   console.log(descriptor);
 }
 
+function Log3(target: any, name: string | Symbol, descriptor: PropertyDescriptor) { // PropertyDescriptorはtypescriptに組み込まれている型
+  console.log("Method デコレータ");
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
 class Product {
   @Log // プロパティにデコレーターを追加することが可能（引数は二つ受け取れる）
   title: string;
@@ -76,6 +83,7 @@ class Product {
     this._price = p;
   }
 
+  @Log3 // メソッドにデコレータを追加する。（引数は三つ）
   getPriceWithTax(tax: number) {
     return this._price * (1 + tax);
   }
