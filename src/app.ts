@@ -49,11 +49,20 @@ function Log(target: any, propertyName: string | Symbol) {
   console.log(target, propertyName);
 }
 
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) { // PropertyDescriptorはtypescriptに組み込まれている型
+  console.log("Accessor デコレータ");
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
 class Product {
   @Log // プロパティにデコレーターを追加することが可能（引数は二つ受け取れる）
   title: string;
   private _price: number;
 
+  // アクセサーにデコレータを追加する。（引数は三つ）
+  @Log2
   set price(val: number) {
     if (val > 0) {
       this._price = val;
