@@ -10,14 +10,22 @@ function Logger(logString: string) { // デコレーターは慣例的に最初�
 
 function WithTemplate(template: string, hookId: string) {
   console.log('Template');
-  return function(constructor: any) {
-    console.log('Template-デコレーター関数');
-    const hookEl = document.getElementById(hookId);
-    const p = new constructor();
-    if (hookEl) {
-      hookEl.innerHTML = template;
-      // class Personのnameを表示させる
-      hookEl.querySelector('h1')!.textContent = p.name
+  // このジェネリクス型はclassを受け取る必要がある。クラスを制約にする場合は中括弧{}を書いてオブジェクトを書く
+  // 中括弧の中にnewを書く。typescriptにオブジェクトだがnewキーワードを使ってインスタンスを作れる、すなわちコンストラクタ関数であることを伝える。
+  // new関数は任意の数の引数を持ち、オブジェクトを返す。
+  return function<T extends {new(...args: any[]): {name: string}}>(originalConstructor: T) {
+    // classに追加されるデコレーターはコンストラクタ関数を返す
+    return class extends originalConstructor { // classはコンストラクタ関数のシンタックスシュガーである。class名は不要。
+      constructor(..._: any[]) { // 新しいコンストラクタ
+        super(); // originalConstructorコンストラクタ関数が呼び出される。継承したclassでコンストラクタ関数を追加した場合は必要
+        console.log('Template-デコレーター関数');
+        const hookEl = document.getElementById(hookId);
+        if (hookEl) {
+          hookEl.innerHTML = template;
+          // class Personのnameを表示させる
+          hookEl.querySelector('h1')!.textContent = this.name
+        }
+      }
     }
   }
 }
